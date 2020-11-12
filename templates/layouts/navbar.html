@@ -1,0 +1,29 @@
+<nav class="navbar fixed-top">
+  <div class="container">
+      <div class="logo">
+          <a href="#">Your Logo</a>
+      </div>
+      <div id="mainListDiv" class="main_list">
+          <ul class="navlinks">
+              <li><a class="active" href="#">Home</a></li>
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Contact</a></li>
+              {% if user.username %}
+                  <li><p>Hello, <a href="#">{{ user.username }}</a> | <a href={% url 'logout' %}>logout</a></p> </li>
+              {% else %}
+                  <li><a href={% url 'login' %}>Login</a></li>
+              {% endif %}
+
+          </ul>
+      </div>
+      <span class="navTrigger">
+          <i></i>
+          <i></i>
+          <i></i>
+      </span>
+  </div>
+</nav>
+
+<section class="home">
+  <p>welcome to</p>
+</section>

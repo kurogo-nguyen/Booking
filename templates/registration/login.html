@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        ul li {
+            color: red;
+            list-style-type: none;
+        }
+    </style>
+    <title>Login</title>
+</head>
+<body>
+<form method="post">
+    {% csrf_token %}
+    <p><label>username: </label>{{ form.username }}</p>
+    <p><label>password: </label>{{ form.password }}</p>
+    {% for key,value in form.errors.items %}
+        {{ value }}
+    {% endfor %}
+    <input type="hidden" name="next" value="{{ next }}"/>
+    <input type="submit" value="login"/>
+</form>
+</body>
+</html>
