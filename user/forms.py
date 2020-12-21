@@ -3,6 +3,7 @@ import re
 from .models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import get_user_model
 
 
 class RegistrationForm(forms.Form):
@@ -30,3 +31,25 @@ class RegistrationForm(forms.Form):
 
     def save(self):
         User.objects.create(username=self.cleaned_data['username'], password=self.cleaned_data['password2'])
+
+
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'dob', 'phone' , 'email')
+
+class CustomUserCreationForm(UserCreationForm):
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'email', 'first_name', 'last_name', 'phone', 'dob')
+
+class StaffCreationForm(UserCreationForm):
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'email', 'first_name', 'last_name', 'phone', 'dob', 'is_staff')
+    
+    # def __init__(self, *args, **kwargs):
+    #     super(CustomUserCreationForm, self).__init__(*args, **kwargs)
+
+        # for fieldname in ['username', 'password1', 'password2']:
+        #     self.fields[fieldname].help_text = None

@@ -6,24 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>{% block title %} {% endblock %}</title>
-
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '/css/custom.css' %}">
+    <link rel="stylesheet" href="{% static '/css/footer.css' %}">
+    <link href="{% static 'fontawesome_free/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesome_free/css/brands.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesome_free/css/solid.css' %}" rel="stylesheet" type="text/css">
     {% block css %} {% endblock %}
   </head>
-  <body>
+  <body class='bg-light'>
     {% include 'layouts/navbar.html' %}
 
-    <div class="content">{% block content %} {% endblock %}</div>
+    <div class="container bg-white py-5">{% block content %} {% endblock %}</div>
 
-    {% include 'layouts/footer.html' %} {% block js %} {% endblock %}
+    {% include 'layouts/footer.html' %} 
 
-    <div id="footer"></div>
     <footer>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-      {% comment %} <script src="{% static 'bootstrap-4.5.2/js/bootstrap.min.js' %}"></script> {% endcomment %}
-      <script src="{% static 'js/nav.js' %}"></script>
+      <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+      {% comment %} <script src="{% static 'js/nav.js' %}"></script> {% endcomment %}
       {% comment %}
       <script src="/assets/js/script.js"></script>
       {% endcomment %}
     </footer>
+    <a id="back-to-top" href="#" class="btn btn-secondary btn-lg back-to-top" role="button"><i class="fas fa-chevron-up"></i></a>
+    <script src="{% static 'js/custom.js' %}"></script>
+    <script src="{% static 'fontawesome_free/js/all.min.js' %}"></script>
+    {% block js %} {% endblock %}
   </body>
 </html>

@@ -5,7 +5,7 @@ from django.db import models
 # Create your models here.
 class User(AbstractUser):
     phone = models.IntegerField(blank=True, null=True)
-    bank = models.IntegerField(blank=True, null=True)
+    dob = models.DateField(db_column='DoB')
 
     class Meta:
         db_table = 'user'

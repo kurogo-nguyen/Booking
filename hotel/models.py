@@ -18,25 +18,59 @@ class Hotel(models.Model):
     manager_id = models.IntegerField(db_column='managerID')
 
     class Meta:
-        managed = False
         db_table = 'hotels'
 
     def __str__(self):
         return self.name
 
-
-class Room(models.Model):
-    hotel_id = models.ForeignKey(Hotel, models.DO_NOTHING, db_column='hid')
-    room_type = models.CharField(db_column='roomType', max_length=1)
-    quantity = models.IntegerField(default='0')
-    img = models.CharField(db_column='rImg', max_length=50, blank=True, null=True)
-    price = models.IntegerField(default='0')
+class Image(models.Model):
+    room_type = models.ForeignKey('RoomType', models.DO_NOTHING, db_column='room_type')
+    image = models.ImageField(upload_to='room_images')
 
     class Meta:
-        # managed = False
-        db_table = 'room'
-        unique_together = ('hotel_id', 'room_type')
+        managed = False
+        db_table = 'image'
+
+    def image_tag(self):
+        from django.utils.html import mark_safe
+        return mark_safe('<img src="{}" width="auto" height="100px" />'.format(self.image.url))
+    image_tag.short_description = 'View'
 
     def __str__(self):
-        name = self.hotel_id.__str__() + " -  " + self.room_type.__str__()
-        return name
+        return self.room_type.__str__()
+
+class Room(models.Model):
+    room_number = models.SmallIntegerField(primary_key=True)
+    room_type = models.ForeignKey('RoomType', models.DO_NOTHING, db_column='room_type')
+    status = models.CharField(
+        max_length=32,
+        choices=(
+            ('available', 'Available'),
+            ('using', 'Using'),
+            ('not clean', 'Need Clean'),
+            ('boken', 'Broken'),
+        ),
+        default = 'available',
+    )
+
+    class Meta:
+        db_table = 'room'
+
+class RoomType(models.Model):
+    room_type = models.CharField(primary_key=True, max_length=30)
+    price = models.IntegerField(default='0')
+    description = models.TextField()
+    NUM_PEOPLE = (
+        ('single', 'Single'),
+        ('double', 'Double'),
+        ('family', 'Family'),
+    )
+    num_person = models.CharField(choices=NUM_PEOPLE, max_length=10)
+    area = models.SmallIntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'room_type'
+    
+    def __str__(self):
+        return self.room_type

@@ -1,28 +1,36 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <style>
-        ul li {
-            color: red;
-            list-style-type: none;
-        }
-    </style>
-    <title>Login</title>
-</head>
-<body>
-<form method="post">
-    {% csrf_token %}
-    <p><label>username: </label>{{ form.username }}</p>
-    <p><label>password: </label>{{ form.password }}</p>
-    {% for key,value in form.errors.items %}
-        {{ value }}
-    {% endfor %}
-    <input type="hidden" name="next" value="{{ next }}"/>
-    <input type="submit" value="login"/>
-</form>
-</body>
-</html>
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block css %}
+    <link href="{% static 'css/form-admin.css' %}" rel="stylesheet" type="text/css">
+{% endblock css %}
+
+
+{% block content %}
+    <div class="container">
+        <h1 class='text-darkgold text-center'>Login</h1>
+            <form method="POST" class='form-create px-5 login'>
+                {% csrf_token %}
+                {% for field in form %}
+                    <p>{{ field.label_tag }}</p>
+                    <p>{{ field }}</p>
+                    {% if field.help_text %}
+                        <small style="color: grey">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p style="color: red">{{ error }}</p>
+                    {% endfor %}
+                    
+                {% endfor %}
+                <p  class='text-center'><a href="{% url 'register' %}" class='text-darkgold'>Create account</a></p>
+                <input type="submit" value="Login" class="btn btn-darkgold">
+            </form>
+    </div>
+{% endblock %}
+
+{% block js %}
+{% endblock js %}

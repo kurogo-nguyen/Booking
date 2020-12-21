@@ -8,5 +8,10 @@ urlpatterns = [
     path('', views.index, name="home"),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
-    path('user/', views.ReservationsListView.as_view(), name='tab')
+    path('profile/', views.CustomerProfileView , name='profile'),
+    path('admin-page/', views.AdminPageView , name='admin-page')
+
 ]
+# urlpatterns = [
+#     path('', views.CustomerProfileView, name='profile'),
+# ]
