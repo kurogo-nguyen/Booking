@@ -15,7 +15,7 @@ class Hotel(models.Model):
     city = models.CharField(max_length=20)
     country = models.CharField(max_length=15)
     phone = models.IntegerField()
-    manager_id = models.IntegerField(db_column='managerID')  # Field name made lowercase.
+    manager_id = models.IntegerField(db_column='managerID')
 
     class Meta:
         managed = False
@@ -26,10 +26,10 @@ class Hotel(models.Model):
 
 
 class Room(models.Model):
-    hotel_id = models.ForeignKey(Hotel, models.DO_NOTHING, db_column='hid')  # Field name made lowercase.
-    room_type = models.CharField(db_column='roomType', max_length=1)  # Field name made lowercase.
+    hotel_id = models.ForeignKey(Hotel, models.DO_NOTHING, db_column='hid')
+    room_type = models.CharField(db_column='roomType', max_length=1)
     quantity = models.IntegerField(default='0')
-    img = models.CharField(db_column='rImg', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    img = models.CharField(db_column='rImg', max_length=50, blank=True, null=True)
     price = models.IntegerField(default='0')
 
     class Meta:
