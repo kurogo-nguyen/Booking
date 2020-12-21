@@ -9,7 +9,8 @@ class Reservation(models.Model):
     date_to = models.DateField()
     cost = models.IntegerField(default='0')
     deposit = models.IntegerField(default='0')
-    trading_code = models.IntegerField(unique=True)
+    room_number = models.ForeignKey(Room, models.DO_NOTHING, db_column='room_number')
+    trading_code = models.IntegerField(blank=True, null=True)
     time = models.DateTimeField(auto_now_add=True)
     RESERVATION_STATUS = (
         ('confirmed', 'Confirmed'),
@@ -21,7 +22,6 @@ class Reservation(models.Model):
     status = models.CharField(choices=RESERVATION_STATUS, max_length=12, default='pending')
 
     class Meta:
-        managed = False
         db_table = 'reservation'
 
 

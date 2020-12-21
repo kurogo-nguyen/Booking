@@ -191,7 +191,7 @@ input{
                   <tbody>
                   {% for my_booking in my_bookings %}
                     <tr>
-                      <td>{{ my_booking.room_type }}</td>
+                      <td>{{ my_booking.room_number.room_type }}</td>
                       <td>{{ my_booking.time.date }}</td>
                       <td>{{ my_booking.date_from }}</td>
                       <td>{{ my_booking.date_to }}</td>
@@ -201,7 +201,7 @@ input{
                       <td>{{ my_booking.get_status_display }}</td>
                       <td>
                       {% if my_booking.status == 'pending' or my_booking.status == 'confirmed'%}
-                        <a href="{% url 'reservation_management' %}?status=cancel&id={{ reservation.id }}" class="btn btn-danger text-white bt-xs">Cancel</a>
+                        <a href="{% url 'profile' %}?rev={{ my_booking.id }}" class="btn btn-danger text-white bt-xs">Cancel</a>
                       {% endif %}
                       </td>
                     </tr>

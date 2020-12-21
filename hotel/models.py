@@ -23,38 +23,6 @@ class Hotel(models.Model):
     def __str__(self):
         return self.name
 
-class Image(models.Model):
-    room_type = models.ForeignKey('RoomType', models.DO_NOTHING, db_column='room_type')
-    image = models.ImageField(upload_to='room_images')
-
-    class Meta:
-        managed = False
-        db_table = 'image'
-
-    def image_tag(self):
-        from django.utils.html import mark_safe
-        return mark_safe('<img src="{}" width="auto" height="100px" />'.format(self.image.url))
-    image_tag.short_description = 'View'
-
-    def __str__(self):
-        return self.room_type.__str__()
-
-class Room(models.Model):
-    room_number = models.SmallIntegerField(primary_key=True)
-    room_type = models.ForeignKey('RoomType', models.DO_NOTHING, db_column='room_type')
-    status = models.CharField(
-        max_length=32,
-        choices=(
-            ('available', 'Available'),
-            ('using', 'Using'),
-            ('not clean', 'Need Clean'),
-            ('boken', 'Broken'),
-        ),
-        default = 'available',
-    )
-
-    class Meta:
-        db_table = 'room'
 
 class RoomType(models.Model):
     room_type = models.CharField(primary_key=True, max_length=30)
@@ -74,3 +42,38 @@ class RoomType(models.Model):
     
     def __str__(self):
         return self.room_type
+
+
+class Room(models.Model):
+    room_number = models.SmallIntegerField(primary_key=True)
+    room_type = models.ForeignKey('RoomType', models.DO_NOTHING, db_column='room_type')
+    status = models.CharField(
+        max_length=32,
+        choices=(
+            ('available', 'Available'),
+            ('using', 'Using'),
+            ('not clean', 'Need Clean'),
+            ('boken', 'Broken'),
+        ),
+        default = 'available',
+    )
+
+    class Meta:
+        db_table = 'room'
+
+
+class Image(models.Model):
+    room_type = models.ForeignKey('RoomType', models.DO_NOTHING, db_column='room_type')
+    image = models.ImageField(upload_to='room_images')
+
+    class Meta:
+        managed = False
+        db_table = 'image'
+
+    def image_tag(self):
+        from django.utils.html import mark_safe
+        return mark_safe('<img src="{}" width="auto" height="100px" />'.format(self.image.url))
+    image_tag.short_description = 'View'
+
+    def __str__(self):
+        return self.room_type.__str__()

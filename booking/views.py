@@ -1,9 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from hotel.models import *
 from django.http import request, HttpResponseRedirect
 from django.http import HttpResponse
 from .forms import *
 from user.forms import ProfileEditForm
+
+from django.contrib.auth.decorators import login_required
 from .models import *
 from datetime import datetime, timedelta
 
@@ -25,13 +27,14 @@ def room_view(request):
             check_in = datetime.today()
             check_out = datetime.today() + timedelta(days=1)
         
-        reserv_using = Reservation.objects.values('id').filter(date_from__lt=check_out).filter(date_to__gt=check_in) 
-        room_reserved = ReservationDetail.objects.values('room_number').filter(reserv__in=reserv_using)
+        reserv_using = Reservation.objects.values('room_number').filter(date_from__lt=check_out).filter(date_to__gt=check_in) 
+        # room_reserved = ReservationDetail.objects.values('room_number').filter(reserv__in=reserv_using)
         type = RoomType.objects.filter(num_person=request.POST.get('capacity'))
         room_available = Room.objects.all().exclude(pk__in=room_reserved).filter(status='available', room_type__in=type)
+
         room_list = RoomType.objects.all().filter(room_type__in=room_available.values('room_type'))
         print(room_reserved)
-        data = {'room_list': room_list, 'dates':dates, 'capacity': request.POST.get('capacity'), 'form': search, 'search':True}
+        data = {'room_list': room_list, 'dates':dates, 'capacity': request.POST.get('capacity'), 'form': search, 'search':True,}
 
         ra_id = [item.room_number for item in room_available]
         request.session['room_show'] = ra_id
@@ -50,7 +53,7 @@ def room_view(request):
         data = {'room_list': rooms, 'form':search, 'images':images}
         response = render(request, 'pages/search.html', data)
     return response
-
+@login_required()
 def payment(request):
     userForm = ProfileEditForm(instance=request.user)
 
@@ -72,17 +75,19 @@ def payment(request):
             'total': total, 'room_name': room_name, 'userForm':userForm}
     print(request.user)
     if request.method == "POST":
+        reserv_using = Reservation.objects.values('room_number').filter(date_from__lt=check_out).filter(date_to__gt=check_in) 
+        room_available = Room.objects.all().exclude(pk__in=reserv_using).filter(status='available', room_type=room_type)[0]
+        
         reservation = Reservation()
 
         reservation.user = request.user
         reservation.date_from = check_in
         reservation.date_to = check_out
         reservation.cost = total
-        reservation.trading_code = total
+        reservation.room_number = room_available
+        # reservation.trading_code = total
         reservation.save()
 
-        # room = 
-        reservation_detail = ReservationDetail(room_number=101 ,reserv=reservation)
         messages.success(request, "Congratulations! Booking Successfull")
         return redirect('booking')
 

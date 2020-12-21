@@ -105,13 +105,10 @@ def room_view(request):
             elif room_status == 'checked-out':
                 room.status = 'not clean'
                 room.save()
-                try:
-                    reservation = ReservationDetail.objects.filter(room_number=r_id, status='checked in')
-                    reservation.status = 'checked out'
-                    reservation.save()
-                except:
-                    pass
-                
+                rev = Reservation.objects.get(room_number=r_id, status='checkedin')
+                rev.status = 'completed'
+                print(rev.status)
+                rev.save()          
             elif room_status == 'checked-in':
                  room.status = 'using'
                  room.save()
@@ -160,7 +157,7 @@ def ChangeAccStatus(request, id, action):
         acc.is_active = False
     acc.save()
     return redirect('admin-account')
-
+@staff_member_required
 def RegisterAcc(request):
     if request.method == 'POST':
         form = StaffCreationForm(request.POST)
@@ -192,39 +189,39 @@ def room_category_view(request):
 
 @staff_member_required
 def reservation_management_view(request):
-    if request.method == "GET":
+    if request.GET.get('id'):
         reservation_id = request.GET.get('id')
-        status = request.GET.get('status')
         try:
             reservation = Reservation.objects.get(pk=reservation_id)
-            # room = Room.objects.get(id=reservation.room_id)
+            status = request.GET.get('status')
+
+            room = Room.objects.get(pk=reservation.room_number.room_number)
+
             if status == 'confirmed':
-                # nights = (reservation.check_out - reservation.check_in).days
-                # total = nights * reservation.room.type.price
                 reservation.status = status
-            if status == 'checkedin':
-                if reservation.check_in <= date.today():
-                    # room.status = 'checkedin'
-                    reservation.status = status
-                else:
-                    messages.warning(request, "Check In isn't ready!")
+                reservation.save()
+            elif status == 'checkedin':
+                # if reservation.check_in <= date.today():
+                room.status = 'using'
+                room.save()
+                reservation.status = status
+                reservation.save()
+            elif status == 'completed':
+                room.status = 'not clean'
+                room.save()
+                reservation.status = status
+                reservation.save()
             else:
-                if status == 'completed':
-                    # room.status = 'unavailable'
-                    reservation.status = status
-            reservation.status = status
-            # room.save()
-            # if status == 'delete':
-            #     reservation.delete()
-            # else:
-            reservation.save()
+                reservation.status = status
+                reservation.save()
+            
         except:
             pass
     reservations = Reservation.objects.all()
     data = {'reservations': reservations}
     return render(request, 'admin/room/reservation_management.html', data)
 
-
+@staff_member_required
 def edit_category_view(request, type):
     room = RoomType.objects.get(pk=type)
     room = RoomTypeForm(instance=room)

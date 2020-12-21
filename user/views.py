@@ -38,6 +38,7 @@ def register(request):
     form = CustomUserCreationForm()
     return render(request, 'pages/register.html', {"form": form})
 
+@login_required()
 class ReservationsListView(ListView):
     queryset = User.objects.all()
     template_name = 'pages/profile.html'
@@ -45,6 +46,10 @@ class ReservationsListView(ListView):
 
 @login_required()
 def CustomerProfileView(request):
+    if request.GET.get('rev'):
+        rev = Reservation.objects.get(pk=request.GET.get('rev'))
+        rev.status = 'cancel'
+        rev.save()
     my_bookings = Reservation.objects.all().filter(user=request.user.id)
     num_bookings = len(my_bookings)
     form = ProfileEditForm(instance =  request.user)
