@@ -1,6 +1,6 @@
 {% load static %}
-<header class="bg-dark" style='height:80px; background-image:url({% static "/images/slider-1.jpg"%})'>
-    <div class='container pt-3'>
+<header class="bg-dark" style='background-image:url({% static "/images/slider-1.jpg"%})'>
+    <div class='container py-0'>
     <nav id="mainav" class="navbar navbar-expand-lg">
     <a class="navbar-brand" href="{% url 'home' %}">Geodarn</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,7 +16,7 @@
                 <li class="nav-item {% if nav == 'login' %}active{% endif %}"><a class='nav-link' href="{% url 'login' %}">Login</a></li>
             {% else %}
                 {% if user.is_staff %}
-                    <li class="nav-item"><a class='nav-link' href="{% url 'admin-page' %}">Admin Page</a></li>
+                    <li class="nav-item"><a class='nav-link' href="{% url 'admin-room' %}">Admin Page</a></li>
                 {% endif %}
                 <li class="nav-item {% if nav == 'profile' %}active{% endif %}"><a class='nav-link pr-0' href="{% url 'profile' %}">Welcome, {{ user.username }} </a></li>
                 <li class="nav-item"><a class='nav-link pl-0' href="{% url 'logout' %}" ><small>(Logout)</small></a></li>

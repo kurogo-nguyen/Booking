@@ -12,14 +12,31 @@
     <link href="{% static 'fontawesome_free/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fontawesome_free/css/brands.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fontawesome_free/css/solid.css' %}" rel="stylesheet" type="text/css">
-    {% block css %} {% endblock %}
+    <style>
+        .itemm {
+            float: left;
+            display: inline-block;
+            width: 31% ;
+        }
+
+        #footer{padding:80px 0;}
+        #footer form{display:block; position:relative; width:100%;}
+        #footer form legend{display:block; margin-bottom:5px;}
+        #footer form div{position:relative;}
+        #footer input, #footer button{display:block; height:36px; border:none;}
+        #footer input{width:100%; min-width:180px; padding:5px 40px 5px 15px;}
+        #footer button{position:absolute; top:1px; right:1px; width:32px; height:34px; font-size:16px; cursor:pointer;}
+        #footer button em{display:none;}
+
+    </style>
+    {% block css %} {% endblock css%}
   </head>
   <body class='bg-light'>
     {% include 'layouts/navbar.html' %}
 
-    <div class="container bg-white py-5" style="min-height: calc(100vh - 348px);">{% block content %} {% endblock %}</div>
+    <div class="container bg-white py-5" style="min-height: calc(100vh - 328px);">{% block content %} {% endblock content%}</div>
 
-    {% include 'layouts/footer.html' %} 
+    {% include 'layouts/footer.html' %}
 
     <footer>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

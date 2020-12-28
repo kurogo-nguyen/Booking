@@ -24,13 +24,11 @@
                     {% for error in field.errors %}
                         <p style="color: red">{{ error }}</p>
                     {% endfor %}
-                    
+
                 {% endfor %}
                 <p  class='text-center'><a href="{% url 'register' %}" class='text-darkgold'>Create account</a></p>
                 <input type="submit" value="Login" class="btn btn-darkgold">
-                <p><strong>-- OR --</strong></p>
-                <a href="{% url 'social:begin' 'github' %}">Login with GitHub</a><br>
-                <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
+
             </form>
     </div>
 {% endblock %}

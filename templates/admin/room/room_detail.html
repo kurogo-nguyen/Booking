@@ -243,18 +243,23 @@
                             <a href="{% url 'admin-room' %}?room_id={{ room.room_number }}&status=checked-out">
                                 <Button class="btn btn-primary">Check Out</Button>
                             </a>
-                        {% elif room.status == 'using' or room.status == 'available' %}
+                        {% elif room.status == 'available' %}
                             <a href="{% url 'admin-room' %}?room_id={{ room.room_number }}&status=checked-in">
                                 <Button class="btn btn-success text-white">Check In</Button>
                             </a>
                             <a href="{% url 'admin-room' %}?room_id={{ room.room_number }}&status=broken">
-                                <Button class="btn btn-danger text-white">Broken</Button>
+                                <Button class="btn btn-warning text-white">Broken</Button>
+                            </a>
+                            <a href="{% url 'admin-room' %}?id={{ room.room_number }}&action=delete">
+                                <Button class="btn btn-danger text-white">Delete</Button>
                             </a>
                         {% else %}
                             <a href="{% url 'admin-room' %}?room_id={{ room.room_number }}&status=available">
                                 <Button class="btn btn-success text-white">Ready</Button>
                             </a>
-
+                            <a href="{% url 'admin-room' %}?id={{ room.room_number }}&action=delete">
+                                <Button class="btn btn-danger text-white">Delete</Button>
+                            </a>
                         {% endif %}
 
 

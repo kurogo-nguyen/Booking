@@ -90,9 +90,10 @@ WSGI_APPLICATION = 'bookingHotel.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'booking_db',
-        'USER': 'root',
-        'PASSWORD': '123456',
+        'NAME': 'kurogo$db',
+        'USER': 'kurogo',
+        'PASSWORD': 'uet123456',
+        'HOST': 'kurogo.mysql.pythonanywhere-services.com',
     }
 }
 
@@ -143,3 +144,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = "user.User"
+
+try:
+    from bookingHotel.local_settings import *
+except ImportError:
+    pass
+# AUTH_PASSWORD_VALIDATORS = []

@@ -43,8 +43,8 @@
                 <tr class="{% if reservation.reservation_status == 'cancel' %}
                         bg-danger
                         {% endif %}">
-                <td><a href=''>{{ reservation.user_id }}<a></td>
-                <td>{{ reservation.room_number.room_type }}</td>
+                <td><a href=''>{{ reservation.user_id.first_name }} {{ reservation.user_id.last_name }}<a></td>
+                <td>{{ reservation.room_number.room_type }} {{ reservation.room_number.room_number}}</td>
                 <td>{{reservation.date_from }}</td>
                 <td>{{reservation.date_to }}</td>
                 <td>{{reservation.trading_code }}</td>

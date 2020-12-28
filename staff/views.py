@@ -13,6 +13,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 
 from django.forms import modelformset_factory
 # from django.template import RequestContext
@@ -44,7 +45,7 @@ def blog_management_view(request):
 def EditPost(request, id):
     post = Post.objects.get(pk=id)
     if request.method == 'POST':
-        postForm1 = PostForm(request.post, instance=post)
+        postForm1 = PostForm(request.POST, instance=post)
         if postForm1.is_valid():
             postForm1.save()
 
@@ -64,7 +65,7 @@ def NewPost(request):
                 content ={
                     'post_form': post
                 }
-            return render(request, 'blog/add_blog.html', content)
+            return redirect('admin-blog')
         except:
             pass
             # messages.error(request, obj.errors)
@@ -78,7 +79,21 @@ def NewPost(request):
 @staff_member_required
 def AddRoom(request):
     if request.method == 'POST':
-        form = RoomForm(request.post)
+        form = RoomForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Add new room successfully!")
+            return redirect('admin-room')
+        else:
+            messages.error(request, "Add new room fail!")
+    else:
+        form = RoomForm()
+    return render(request, 'admin/room/add_room.html', {'form': form})
+
+@staff_member_required
+def EditRoom(request):
+    if request.method == 'POST':
+        form = RoomForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, "Add new room successfully!")
@@ -91,6 +106,12 @@ def AddRoom(request):
 
 @staff_member_required
 def room_view(request):
+    if request.GET.get('action'):
+        if request.GET.get('action') == 'delete':
+            room = Room.objects.get(pk=request.GET.get('id'))
+            room.delete()
+        elif request.GET.get('action') == 'edit':
+            pass
     r_id = request.GET.get('room_id')
     room_status = request.GET.get('status')
     rooms = Room.objects.all().order_by('room_number')
@@ -108,7 +129,7 @@ def room_view(request):
                 rev = Reservation.objects.get(room_number=r_id, status='checkedin')
                 rev.status = 'completed'
                 print(rev.status)
-                rev.save()          
+                rev.save()
             elif room_status == 'checked-in':
                  room.status = 'using'
                  room.save()
@@ -120,7 +141,7 @@ def room_view(request):
     rooms = myFilter.qs
     total_rooms = len(Room.objects.all())
     rooms_available = len(Room.objects.filter(status='available'))
-    rooms_unavailable = len(Room.objects.filter(status='broken'))
+    rooms_unavailable = len(Room.objects.filter(status__in={'broken','not clean'}))
     rooms_checked_in = len(Room.objects.filter(status='using'))
 
     data = {'checkedIn': rooms_checked_in, 'total_rooms': total_rooms, 'unavailable': rooms_unavailable,
@@ -168,24 +189,12 @@ def RegisterAcc(request):
             user = authenticate(username=username, password=password)
             login(request, user)
             return redirect('home')
+        else:
+            return render(request, 'pages/register.html', {"form": form})
     form = StaffCreationForm()
     return render(request, 'pages/register.html', {"form": form})
 
-@staff_member_required
-def room_category_view(request):
-    if request.method == "GET":
-        try:
-            type = request.GET.get('room_number')
-            category = RoomType.objects.get(pk=type)
-            category.delete()
-            messages.success(request, "Delete category successfully!")
-        except:
-            pass
-    rooms = RoomType.objects.all().order_by('room_type')
-    images = Image.objects.all()
-    data = {'rooms': rooms, 'images': images}
 
-    return render(request, 'admin/room/room_category.html', data)
 
 @staff_member_required
 def reservation_management_view(request):
@@ -214,30 +223,51 @@ def reservation_management_view(request):
             else:
                 reservation.status = status
                 reservation.save()
-            
+
         except:
             pass
     reservations = Reservation.objects.all()
     data = {'reservations': reservations}
     return render(request, 'admin/room/reservation_management.html', data)
 
+    #room_type
+
+@staff_member_required
+def room_category_view(request):
+    if request.method == "GET":
+        try:
+            type = request.GET.get('room_number')
+            category = RoomType.objects.get(pk=type)
+            category.delete()
+            messages.success(request, "Delete category successfully!")
+        except:
+            pass
+    rooms = RoomType.objects.all().order_by('room_type')
+    images = Image.objects.all()
+    data = {'rooms': rooms, 'images': images}
+
+    return render(request, 'admin/room/room_category.html', data)
+
 @staff_member_required
 def edit_category_view(request, type):
     room = RoomType.objects.get(pk=type)
-    room = RoomTypeForm(instance=room)
-    imgs = Image.objects.filter(room_type=type)
-    images=[]
-    for img in imgs:
-        images.append(ImageForm(instance=img))
 
     if request.method == 'POST':
-        form = CategoryForm(request.POST, instance=room)
-        if form.is_valid():
-            form.save()
+        roomform = RoomTypeForm(request.POST, instance=room)
+        if roomform.is_valid():
+            roomform.save()
             messages.success(request, "Update category successfully!")
             return redirect('room_category')
+    else:
+        roomform = RoomTypeForm(instance=room)
+        imgs = Image.objects.filter(room_type=type)
+        images=[]
+        for img in imgs:
+            images.append(ImageForm(instance=img))
+        ImageFormSet = modelformset_factory(Image, form=ImageForm, extra=3)
+        formset = ImageFormSet(queryset=Image.objects.none())
 
-    data = {'room': room, 'images':images}
+    data = {'room': roomform, 'images':images}
     return render(request, 'admin/room/edit_category.html', data)
 
 

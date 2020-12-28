@@ -25,7 +25,7 @@ class Hotel(models.Model):
 
 
 class RoomType(models.Model):
-    room_type = models.CharField(primary_key=True, max_length=30)
+    room_type = models.CharField(max_length=30)
     price = models.IntegerField(default='0')
     description = models.TextField()
     NUM_PEOPLE = (
@@ -39,14 +39,14 @@ class RoomType(models.Model):
     class Meta:
         managed = False
         db_table = 'room_type'
-    
+
     def __str__(self):
         return self.room_type
 
 
 class Room(models.Model):
     room_number = models.SmallIntegerField(primary_key=True)
-    room_type = models.ForeignKey('RoomType', models.DO_NOTHING, db_column='room_type')
+    room_type= models.ForeignKey('RoomType', models.DO_NOTHING, blank=True, null=True)
     status = models.CharField(
         max_length=32,
         choices=(
@@ -63,7 +63,7 @@ class Room(models.Model):
 
 
 class Image(models.Model):
-    room_type = models.ForeignKey('RoomType', models.DO_NOTHING, db_column='room_type')
+    room_type = models.ForeignKey('RoomType', models.DO_NOTHING, blank=True, null=True)
     image = models.ImageField(upload_to='room_images')
 
     class Meta:

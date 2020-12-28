@@ -36,7 +36,7 @@
                 <div class="post-content-body">
 
                     <h1> {{ post.title }} </h1>
-                    <small class="post-meta">Posted by <a href="{% url 'sort_author' post.author.id %} ">{{ post.author }}</a> 
+                    <small class="post-meta">Posted by <a href="{% url 'sort_author' post.author.id %} ">{{ post.author }}</a>
                     on <a href="#">{{ post.date.date }} </a>
                     </small>
                     <hr>
@@ -46,8 +46,7 @@
                     <img src="{{ post.image.url }}" alt="Image placeholder" class="img-fluid rounded">
                 </div>
                 <div class="pt-5">
-                    <p>Categories: <a href="#">Food</a>, <a href="#">Travel</a> Tags: <a href="#">#manila</a>, <a
-                            href="#">#asia</a></p>
+                    <p>Categories: <a href="#">{{ post.get_category_display}}</a></p>
                 </div>
             </div>
 
@@ -71,14 +70,14 @@
                 <div class="sidebar-box">
                     <h3 class="heading">Categories</h3>
                     <ul class="categories">
-                        <li><a href="#">Food <span>(12)</span></a></li>
-                        <li><a href="#">Travel <span>(22)</span></a></li>
-                        <li><a href="#">Lifestyle <span>(37)</span></a></li>
-                        <li><a href="#">Business <span>(42)</span></a></li>
-                        <li><a href="#">Adventure <span>(14)</span></a></li>
+                        <li><a href='{% url "sort_category" "food" %}'>Food </a></li>
+                        <li><a href='{% url "sort_category" "travel" %}'>Travel</a></li>
+                        <li><a href='{% url "sort_category" "service" %}'>Service</a></li>
+                        {% comment %}<li><a href="#">Business <span>(42)</span></a></li>
+                        <li><a href="#">Adventure <span>(14)</span></a></li>{% endcomment %}
                     </ul>
                 </div>
-
+{% comment %}
                 <div class="sidebar-box">
                     <h3 class="heading">Tags</h3>
                     <ul class="tags">
@@ -95,10 +94,10 @@
                         <li><a href="#">Business</a></li>
                         <li><a href="#">Freelancing</a></li>
                     </ul>
-                </div>
+                </div>{% endcomment %}
             </div>
 
         </div>
-    {% comment %} </div> {% endcomment %}
+    </div>
 
 {% endblock content %}

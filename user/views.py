@@ -35,6 +35,8 @@ def register(request):
             user = authenticate(username=username, password=password)
             login(request, user)
             return redirect('home')
+        else:
+            return render(request, 'pages/register.html', {"form": form})
     form = CustomUserCreationForm()
     return render(request, 'pages/register.html', {"form": form})
 
@@ -67,7 +69,7 @@ def CustomerProfileView(request):
                 user = pass_form.save()
                 update_session_auth_hash(request, user)
                 messages.success(request, 'Your password was successfully updated!')
-                return redirect('/profile')      
+                return redirect('/profile')
     content = {
         'form': form,
         'pass_form': pass_form,

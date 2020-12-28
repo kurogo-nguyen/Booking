@@ -41,17 +41,17 @@
                             {% endif %}
                         {% endfor %}
                         </td>
-                    
+
 
                         <td class='align-middle' width=80>&euro; {{ room.price }}</td>
                         <td class='align-middle'>{{ room.get_num_person_display }}</td>
                         <td class='align-middle'>{{ room.area }}</td>
                         <td class='align-middle'>{{ room.description }}</td>
                         <td class='align-middle'>
-                            <a href="{% url 'edit_category' room.room_type %}">
+                            <a href="{% url 'edit_category' room.id %}">
                                 <Button class="btn btn-primary">Edit</Button>
                             </a>
-                            <a href="{% url 'room_category' %}?room_number={{ room.room_type }}">
+                            <a href="{% url 'room_category' %}?room_number={{ room.id }}">
                                 <Button class="btn btn-danger">Delete</Button>
                             </a>
                         </td>
